@@ -1,0 +1,11 @@
+10 5 9
+TTTTVTTTTT
+D 1
+E 2
+D 1
+D 1
+D 1
+E 3
+E 1
+D 4
+D 1
