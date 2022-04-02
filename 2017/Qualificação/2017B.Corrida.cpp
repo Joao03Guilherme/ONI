@@ -35,10 +35,16 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 #define debug(x...)
 #endif
 
-const int MX = 1000000000;
-const int START = -1;
-const int PA = 0;
-const int FINISH = 1;
+
+int N, Q;
+vector<vector<int>> points;
+set<pair<int, int>> sweep_line;
+
+struct cmp {
+	bool operator() (const vector<int> v1, const vector<int> v2) {
+		return v1[0] < v2[0];
+	}
+};
 
 int main()
 {
@@ -47,40 +53,35 @@ int main()
 	freopen("output.txt", "w", stdout);
 #endif
     IOS;
-    int n, d, k; cin >> n >> d >> k;
-    vi pas(n); for (int& x : pas) cin >> x;
-    set<pii> points; 
+    cin >> N >> Q; 
 
-    for (int x : pas) {
-        points.insert({max(1, x-d), START});
-        points.insert({x, PA});
-        points.insert({min(x+d, MX), FINISH});
+    for (int i = 0; i < N; i++) {
+    	int x1, y1, x2, y2; cin >> x1 >> y1 >> x2 >> y2;
+    	int h = abs(y1 - y2);
+
+    	vector<int> v1 = {x1, h, 1};
+    	vector<int> v2 = {x2, h, -1};
+    	points.pb(v1); points.pb(v2);
     }
+    sort(points.begin(), points.end(), cmp());
 
-    int cnt = 0;
-    for (auto p : points) {
-        if (p.second == START) cnt++;
-        else if (p.second == FINISH) cnt--;
-        else {
-            if (cnt >= k) n--;
-        }
+    int C = 0;
+    sweep_line.insert({0,0}); // Dummy value in case x is less than all recorded positions
+    for (vector<int> p : points) {
+    	int x = p[0], h = p[1], t = p[2];
+    	if (t == 1) C += h;
+    	else C -= h;
+
+    	auto itr = sweep_line.find({x, 0}); // Update previous value
+    	if (itr != sweep_line.end()) sweep_line.erase(itr);
+
+    	sweep_line.insert({x, C});
     }
-
-    cout << n << "\n";
+    
+    while (Q--) {
+    	int x; cin >> x;
+    	auto itr = sweep_line.upper_bound({x, 0});
+    	cout << (*itr).second << "\n";
+    }
     return 0;
 }
-
-/*
-	COISAS A TOMAR ATENÇÃO
-    - Overflow
-    - Prestar atenção aos limites do problema
-    - É preciso apenas determinar um número ou a resposta "toda"
-    - Utilizar Sievo para primos
-    - Precomputação
-    - Inverter o problema
-    - Identificar implicações lógicas
-    - Problemas com vetores -> O(n)?
-    - Manipular fórmulas dadas
-    - Há monotonia -> pesquisa binária usa invariance
-    - Para números reais, usar setprecision(20)
-*/

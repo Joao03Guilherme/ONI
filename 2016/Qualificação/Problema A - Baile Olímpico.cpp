@@ -35,52 +35,36 @@ void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v..
 #define debug(x...)
 #endif
 
-const int MX = 1000000000;
-const int START = -1;
-const int PA = 0;
-const int FINISH = 1;
-
-int main()
+int main() 
 {
 #ifndef ONLINE_JUDGE
 	freopen("input.txt", "r", stdin);
 	freopen("output.txt", "w", stdout);
 #endif
-    IOS;
-    int n, d, k; cin >> n >> d >> k;
-    vi pas(n); for (int& x : pas) cin >> x;
-    set<pii> points; 
+	IOS;
 
-    for (int x : pas) {
-        points.insert({max(1, x-d), START});
-        points.insert({x, PA});
-        points.insert({min(x+d, MX), FINISH});
-    }
+	int n, k; cin >> n >> k;
+	vector<char> v(n); for (char& x : v) cin >> x;
 
-    int cnt = 0;
-    for (auto p : points) {
-        if (p.second == START) cnt++;
-        else if (p.second == FINISH) cnt--;
-        else {
-            if (cnt >= k) n--;
-        }
-    }
+	vector<int> p(n+1); p[0] = 0; // one indexed
+	for (int i = 1; i < n+1; i++) {
+		if (v[i-1] == 'H') {
+			p[i] = p[i-1] + 1;
+		}
+		else {
+			p[i] = p[i-1];
+		}
+	} 
 
-    cout << n << "\n";
-    return 0;
+	ll ans = 0;
+	for (int i = 0; i < n; i++) {
+		if (v[i] == 'M') {
+			int n_homens = p[min(i+k+1, n)] - p[i]; 
+			ans += n_homens;
+		}
+	}
+
+	debug(p);
+	cout << ans << "\n";
+	return 0;
 }
-
-/*
-	COISAS A TOMAR ATENÇÃO
-    - Overflow
-    - Prestar atenção aos limites do problema
-    - É preciso apenas determinar um número ou a resposta "toda"
-    - Utilizar Sievo para primos
-    - Precomputação
-    - Inverter o problema
-    - Identificar implicações lógicas
-    - Problemas com vetores -> O(n)?
-    - Manipular fórmulas dadas
-    - Há monotonia -> pesquisa binária usa invariance
-    - Para números reais, usar setprecision(20)
-*/
