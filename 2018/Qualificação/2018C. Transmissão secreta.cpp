@@ -1,10 +1,11 @@
 # include <bits/stdc++.h>
 # define IOS ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 # define pb push_back
+# define ll long long int
+# define vi vector<int>
+# define pii pair<int, int>
 using namespace std;
-using ll = long long int;
-using vi = vector<int>;
-using pii = pair<int, int>;
+
 const int INF = 1000000009;
 const long long INFLL = (ll)INF * (ll)INF;
 
@@ -48,10 +49,6 @@ void bfs(int i, int j, int d, vector<int>& group) {
 
 int main() 
 {
-#ifndef ONLINE_JUDGE
-	freopen("input.txt", "r", stdin);
-	freopen("output.txt", "w", stdout);
-#endif
 	IOS;
 	cin >> L >> C >> D;
 	int cnt = 1;
@@ -83,11 +80,11 @@ int main()
 	vector<multiset<int>> groups_cost;
 	for (vector<int> group : groups) {
 		multiset<int> g_cost;
-		for (int i = 0; i < group.size(); i++) g_cost.insert(1);
+		for (int i = 0; i < (int)group.size(); i++) g_cost.insert(1);
 			groups_cost.pb(g_cost);
 	}
 
-	int cost = groups.size();
+	int cost = (int)groups.size();
 	int Q; cin >> Q;
 	while (Q--) {
 		int t, q; cin >> t >> q;
